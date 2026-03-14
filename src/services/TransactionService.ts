@@ -40,6 +40,9 @@ class TransactionService {
     try {
       const deleteTransaction =
         await Transaction.findByIdAndDelete(transactionId);
+      if (deleteTransaction!) {
+        throw new Error("Transaction not Found");
+      }
     } catch (error) {
       throw error;
     }

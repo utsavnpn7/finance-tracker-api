@@ -1,6 +1,11 @@
 import { Request, Response } from "express";
 import AuthService from "../services/AuthService";
-
+const cookieOption = {
+  httpOnly: true,
+  secure: process.env.NODE_ENV === "production",
+  sameSite: "strict" as const,
+  maxAge: 7 * 24 * 60 * 60,
+};
 class AuthController {
   //controller for Authentication
   async register(req: Request, res: Response): Promise<void> {
@@ -19,16 +24,43 @@ class AuthController {
   }
   async login(req: Request, res: Response): Promise<void> {
     //login controller
-    const { email, password } = req.body;
-    try {
-      const token: string = await AuthService.login(email, password);
 
-      res.status(200).json(token);
+    try {
+      const { email, password } = req.body;
+      const { accessToken, refreshToken } = await AuthService.login(
+        email,
+        password,
+      );
+      res.cookie("refreshToken", refreshToken, cookieOption);
+      res.status(200).json({ message: "Login Successful", accessToken });
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Something went wrong";
       res.status(400).json({ message });
     }
+  }
+
+  async refreshToken(req: Request, res: Response): Promise<void> {
+    try {
+      const clientRefreshToken = req.cookies.refreshToken;
+      if (!clientRefreshToken) {
+        res.status(401).json({ message: "Refresh token not found" });
+      }
+      const { refreshToken, accessToken } =
+        AuthService.verifyRefreshToken(clientRefreshToken);
+      res.cookie("refreshToken", refreshToken, cookieOption);
+      res.status(200).json({ accessToken });
+      return;
+    } catch (error) {
+      const message =
+        error instanceof Error ? error.message : "Something went wrong";
+      res.status(401).json({ message });
+    }
+  }
+  async logout(req: Request, res: Response): Promise<void> {
+    res.clearCookie("refreshToken", { httpOnly: true });
+    res.status(200).json({ message: "Logout Successful" });
+    return;
   }
 }
 export default new AuthController();

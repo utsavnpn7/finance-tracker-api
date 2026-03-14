@@ -19,7 +19,10 @@ class AuthService {
     }
   }
 
-  async login(email: string, password: string): Promise<string> {
+  async login(
+    email: string,
+    password: string,
+  ): Promise<{ accessToken: string; refreshToken: string }> {
     //login User
     try {
       //find user by email
@@ -31,15 +34,42 @@ class AuthService {
       if (!verifyPassword) {
         throw new Error("Password does not match");
       }
-      return await this.generateToken(response.id); ///returns jwt
+      return {
+        accessToken: this.generateToken(response.id),
+        refreshToken: this.generateRefreshToken(response.id),
+      }; ///returns jwt
     } catch (error) {
       throw error;
     }
   }
+  verifyRefreshToken(token: string): {
+    accessToken: string;
+    refreshToken: string;
+  } {
+    try {
+      const decode = jwt.verify(
+        token,
+        process.env.JWT_REFRESH_SECRET as string,
+      ) as { userId: string };
+
+      return {
+        accessToken: this.generateToken(decode.userId),
+        refreshToken: this.generateRefreshToken(decode.userId),
+      };
+    } catch (e) {
+      throw e;
+    }
+  }
+  private generateRefreshToken(userId: string): string {
+    return jwt.sign({ userId }, process.env.JWT_REFRESH_SECRET as string, {
+      expiresIn: "7d",
+    });
+  }
   private generateToken(userId: string): string {
+    console.log(process.env.JWT_SECRET);
     //private function to generate jwt token
     return jwt.sign({ userId }, process.env.JWT_SECRET as string, {
-      expiresIn: "7d",
+      expiresIn: "15m",
     });
   }
 }

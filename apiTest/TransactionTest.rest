@@ -1,6 +1,7 @@
 //Create Transaction 
 
 POST http://localhost:3000/api/transaction
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiI2OWI0YjM3MzcxM2M4Y2I1MjM2YzYzOTgiLCJpYXQiOjE3NzM0NjQxNDcsImV4cCI6MTc3NDA2ODk0N30.7gtdSS7snbm_ldkMcvUmJ0XSmX-pjiXfFSfgShEnbs4
 Content-Type: application/json
 
 {
@@ -17,7 +18,7 @@ Content-Type: application/json
     "serviceName": "Stock",
     "transactionType": "income",
     "userId": "69b4b373713c8cb5236c6398",
-    "ammount": 500
+    "ammount": 2500
 }
 
 ####
@@ -28,3 +29,24 @@ Content-Type: application/json
     "userId":"69b4b373713c8cb5236c6398"
 }
 
+
+###
+GET http://localhost:3000/api/transaction/id
+Content-Type: application/json
+
+{
+    "id":"69b4c17a22088941da4647df"
+}
+
+
+####
+DELETE http://localhost:3000/api/transaction/id
+Content-Type: application/json
+
+{"id":"69b4bfbf9781a527a65f374f"}
+
+####
+GET http://localhost:3000/api/transaction/summary 
+Content-Type: application/json
+
+{"userId":"69b4b373713c8cb5236c6398"}

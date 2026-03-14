@@ -5,12 +5,14 @@ import cors from "cors";
 import connectDB from "./services/dbConnection";
 import AuthRoutes from "./routes/AuthRoute";
 import TransactionRoutes from "./routes/TransactionRoute";
+import cookieParser from "cookie-parser";
 dotenv.config();
 const app: Application = express();
 
 //middleware
 app.use(cors());
 app.use(express.json());
+app.use(cookieParser());
 //Routes
 app.use("/api/transaction", TransactionRoutes);
 app.use("/auth", AuthRoutes);
