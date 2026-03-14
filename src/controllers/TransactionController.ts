@@ -1,6 +1,7 @@
 import e, { Request, Response } from "express";
 import TransactionService from "../services/TransactionService";
-class TransactionController {
+import { IController } from "../interfaces/IController";
+class TransactionController implements IController {
   //controller for transaction
   async create(req: Request, res: Response) {
     try {
