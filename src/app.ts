@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import cors from "cors";
 import connectDB from "./services/dbConnection";
 import AuthRoutes from "./routes/AuthRoute";
+import TransactionRoutes from "./routes/TransactionRoute";
 dotenv.config();
 const app: Application = express();
 
@@ -11,9 +12,10 @@ const app: Application = express();
 app.use(cors());
 app.use(express.json());
 //Routes
+app.use("/api/transaction", TransactionRoutes);
 app.use("/auth", AuthRoutes);
 //HealtCheck Route
-app.get("/", (req: Request, res: Response) => {
+app.get("/health", (req: Request, res: Response) => {
   res.json({ message: "Finance Tracker API is running!" });
 });
 

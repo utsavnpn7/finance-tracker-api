@@ -1,5 +1,5 @@
 import mongoose, { Document, Schema } from "mongoose";
-enum TransactionType {
+export enum TransactionType {
   Income = "income",
   Expense = "expense",
 }

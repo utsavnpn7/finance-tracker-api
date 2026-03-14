@@ -1,0 +1,30 @@
+//Create Transaction 
+
+POST http://localhost:3000/api/transaction
+Content-Type: application/json
+
+{
+    "serviceName": "Coffee",
+    "transactionType": "expense",
+    "userId": "69b4b373713c8cb5236c6398",
+    "ammount": 500
+}
+####
+POST http://localhost:3000/api/transaction
+Content-Type: application/json
+
+{
+    "serviceName": "Stock",
+    "transactionType": "income",
+    "userId": "69b4b373713c8cb5236c6398",
+    "ammount": 500
+}
+
+####
+GET http://localhost:3000/api/transaction/allTransaction
+Content-Type: application/json
+
+{
+    "userId":"69b4b373713c8cb5236c6398"
+}
+

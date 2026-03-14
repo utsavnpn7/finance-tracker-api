@@ -1,0 +1,25 @@
+//Health Check 
+GET http://localhost:3000/health
+
+
+#######
+//Register
+POST http://localhost:3000/auth/register
+Content-Type: application/json
+
+{
+    "name":"Utsav Neupane",
+    "email":"test@gmail.com",
+    "password":"password@1234"
+} 
+
+#####
+//Login
+POST http://localhost:3000/auth/login
+Content-Type: application/json
+
+{
+
+    "email":"test@gmail.com",
+    "password":"password@1234"
+} 
