@@ -1,4 +1,4 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import AuthService from "../services/AuthService";
 const cookieOption = {
   httpOnly: true,
@@ -8,7 +8,11 @@ const cookieOption = {
 };
 class AuthController {
   //controller for Authentication
-  async register(req: Request, res: Response): Promise<void> {
+  async register(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const user = await AuthService.create(req.body); //asynchronous call for creating user/register user
 
@@ -17,12 +21,10 @@ class AuthController {
         data: { id: user._id.toString(), name: user.name, email: user.email },
       }); //json return after creating user
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Something went wrong";
-      res.status(400).json({ message });
+      next(error);
     }
   }
-  async login(req: Request, res: Response): Promise<void> {
+  async login(req: Request, res: Response, next: NextFunction): Promise<void> {
     //login controller
 
     try {
@@ -34,13 +36,15 @@ class AuthController {
       res.cookie("refreshToken", refreshToken, cookieOption);
       res.status(200).json({ message: "Login Successful", accessToken });
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Something went wrong";
-      res.status(400).json({ message });
+      next(error);
     }
   }
 
-  async refreshToken(req: Request, res: Response): Promise<void> {
+  async refreshToken(
+    req: Request,
+    res: Response,
+    next: NextFunction,
+  ): Promise<void> {
     try {
       const clientRefreshToken = req.cookies.refreshToken;
       if (!clientRefreshToken) {
@@ -52,9 +56,7 @@ class AuthController {
       res.status(200).json({ accessToken });
       return;
     } catch (error) {
-      const message =
-        error instanceof Error ? error.message : "Something went wrong";
-      res.status(401).json({ message });
+      next(error);
     }
   }
   async logout(req: Request, res: Response): Promise<void> {

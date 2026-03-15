@@ -1,9 +1,10 @@
+import { IService } from "../interfaces/IServices";
 import Transaction, {
   ITransaction,
   TransactionType,
 } from "../models/Transaction";
 
-class TransactionService {
+class TransactionService implements IService<ITransaction>{
   //Business logic for transaction
   //method to create transaction
   async create(
