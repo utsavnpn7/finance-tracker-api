@@ -15,12 +15,15 @@ app.use(express.json());
 app.use(cookieParser());
 //Routes
 app.use("/api/transaction", TransactionRoutes);
-app.use("/auth", AuthRoutes);
+app.use("/api/auth", AuthRoutes);
 //HealtCheck Route
 app.get("/health", (req: Request, res: Response) => {
   res.json({ message: "Finance Tracker API is running!" });
 });
-app.use(errorMiddleware); //Start Server
+
+//Error middleware handler
+app.use(errorMiddleware);
+//Start Server
 const PORT = process.env.PORT;
 connectDB().then(() => {
   app.listen(PORT, () => {
